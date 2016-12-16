@@ -1,4 +1,4 @@
-package cw3.project;
+package cw3.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

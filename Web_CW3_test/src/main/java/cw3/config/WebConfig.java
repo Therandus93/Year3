@@ -1,4 +1,4 @@
-package cw3.project;
+package cw3.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
