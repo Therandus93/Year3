@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = {"/page"})
+@RequestMapping(value = {"/"})
 public class PageController {
 	
 	  @RequestMapping(value = {"/index"})

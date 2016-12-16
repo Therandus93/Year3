@@ -1,4 +1,4 @@
-package cw3.project;
+package cw3.spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
