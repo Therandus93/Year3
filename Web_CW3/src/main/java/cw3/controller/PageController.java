@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = {"/"})
 public class PageController {
 	
-	  @RequestMapping(value = {"/index"})
-	    public ModelAndView homePage(Model model){
+	  @RequestMapping(value = {"/index"}, method = RequestMethod.GET)
+	    public ModelAndView homePage(){
 	        return new ModelAndView("index");
 	    }  
+	  
+	  @RequestMapping(value = {"/error"}, method = RequestMethod.GET)
+	    public ModelAndView error(){
+	        return new ModelAndView("error");
+	   }  
 }
