@@ -17,7 +17,7 @@ public class PageController {
 	        return new ModelAndView("index");
 	    }  
 	  
-	  @RequestMapping(value = {"/error"}, method = RequestMethod.GET)
+	  @RequestMapping(value = {"/errorPage"}, method = RequestMethod.GET)
 	    public ModelAndView error(){
 	        return new ModelAndView("error");
 	   }  

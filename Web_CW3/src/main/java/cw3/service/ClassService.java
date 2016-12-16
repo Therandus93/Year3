@@ -1,4 +1,4 @@
-package cw3.project.service;
+package cw3.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
