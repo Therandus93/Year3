@@ -1,4 +1,4 @@
-package cw3.domain;
+package cw3.entities;
 
 public class Property {
 	
@@ -25,11 +25,10 @@ public class Property {
 	public Property(String propertyName, PRIMITIVE_TYPE propertyType) {
 		super();
 		this.propertyName = propertyName;
-		this.propertyType = new PrimitiveType(propertyName,propertyType);;
+		this.propertyType = new PrimitiveType(propertyName,propertyType);
 	}
 
 	
-
 	String propertyName;
 	MetaType propertyType;
 	

@@ -1,14 +1,12 @@
-package cw3.domain;
+package cw3.entities;
 
 import java.util.*;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
-@Entity
 public class Instance {
 	
+	public Instance() {
+		
+	}
 
 	public MetaType getType() {
 		return type;
@@ -31,19 +29,13 @@ public class Instance {
 	
 	
 	public void setPropertyValue(Property property, Object value){
-		propertValues.put(property,value);
+		propertyValues.put(property,value);
 	}
 
-	 @Id
-	 @GeneratedValue
-	 @Column(name = "id")
-	Integer id;
-	 @Column(name = "metatype")
+	
 	MetaType type;
-	 @Column(name = "name")
 	String instanceName;
-	 @Column(name = "properties")
-	HashMap<Property, Object> propertValues= new HashMap<Property, Object>();
+	HashMap<Property, Object> propertyValues= new HashMap<Property, Object>();
 	
 	
 	public String toString(){
@@ -53,7 +45,7 @@ public class Instance {
 		
 	    String comma="";
 	    boolean first =true;
-		for (Map.Entry<Property, Object> entry : propertValues.entrySet()) {
+		for (Map.Entry<Property, Object> entry : propertyValues.entrySet()) {
 			Property key = entry.getKey();
 		    Object value = entry.getValue();
 		    if(value!=null){

@@ -1,4 +1,4 @@
-package cw3.domain;
+package cw3.entities;
 
 public abstract class MetaType {
 
@@ -15,7 +15,7 @@ public abstract class MetaType {
 		super();
 		this.name = name;
 	}
-
+	
 	String name;
 
 	

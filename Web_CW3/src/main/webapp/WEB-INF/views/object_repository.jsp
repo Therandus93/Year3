@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head> 
-    <title>Error page</title> 
+    <title>Object Repository</title> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -15,8 +15,8 @@
 <body>
 <div class="container-fluid bg-1 text-center">
     <div class="Jumbotron" >
-    <h1>Error Loading Page</h1>
-    <h4>Something unexpected has happened, sorry for the inconvenience</h4>
+    <h1>Object Repository</h1>
+    <h4>Create and view instance of classes</h4>
     </div>
     <div class="row">
           <a href="./index" class="btn btn-primary">Back</a>

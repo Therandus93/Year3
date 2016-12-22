@@ -1,4 +1,4 @@
-package cw3.domain;
+package cw3.entities;
 
 import java.util.Vector;
 
@@ -6,6 +6,10 @@ public class UMTClass extends MetaType{
 	
 	Vector<UMTClass> superClasses=new Vector<UMTClass> ();
 	Vector<Property> properties=new Vector<Property>();
+	
+	public UMTClass() {
+		super("");
+	}
 	
 	public UMTClass(String name) {
 		super(name);
