@@ -6,6 +6,7 @@ public class UMTClass extends MetaType{
 	
 	Vector<UMTClass> superClasses=new Vector<UMTClass> ();
 	Vector<Property> properties=new Vector<Property>();
+	private int level = 0;
 	
 	public UMTClass() {
 		super("");
@@ -56,6 +57,14 @@ public class UMTClass extends MetaType{
 		}
 		
 		return sb.toString();
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 

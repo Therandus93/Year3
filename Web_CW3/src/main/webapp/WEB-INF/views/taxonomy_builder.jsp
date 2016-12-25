@@ -9,14 +9,8 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
    <link href="css/style.css" type="text/css" rel="stylesheet">
-   <style id="treeview1-style" type="text/css"> 
-   .treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}
-   .treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}
-   .node-treeview1{}.node-treeview1:not(.node-disabled):hover{background-color:#F5F5F5;} 
-   </style>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="js/bootstrap-treeview.js"></script>
 <script>
 
 
@@ -25,33 +19,43 @@ $(document).ready(function(){
 
 	var tree;
 	
+	grabProp();
+	
 	$.ajax({
 		type: "GET",
-		url: "/rest/class/hierarchy/root",
+		url: "/rest/class/tree",
 		dataType: 'json',
 		success: function(result){
 			var defaultData = JSON.stringify(result);
-			tree = defaultData;
-			$("#test").text(defaultData);
+			tree = defaultData.replace(/},/g, "},<br/>"); 
+			$("#test").html("<p>" + tree + "</p><br/> <strong> Couldn't get the Graphical TreeView to work, added the level property" +
+					" to help show the Tree levels but one is wrong (Due to multiple inheritences), but if you follow the colons and DB, it is correct," +
+					" in case you couldn't tell, i ran out of time</strong>");
 	}});
-				
-	$('#treeview').treeview({data: tree});
+	
 });
 
 
-$("#classesProp").change(function() {
-	$("#test").text("");
-	$.ajax({
-		 type: "GET",
-		 url: "/grabProperties",
-		 success: function(result){
-			 
-		 }});
-})
-	
+</script>
+<script>
+function grabProp()  {
+			$.ajax({
+				 type: "GET",
+				 url: "/rest/class/grabProp/",
+				 data:  "name=" + $("#classesProp").val(),
+				 success: function(result){
+					 p = result;
+	    			 var options = '';
+	                 for (var i = 0; i < p.length; i++) {
+	                   options += '<option value="' + p[i] + '">' + p[i] + '</option>';
+	                 }
+	                 $("#classProp").html(options);
+	    		}	 	
+		});	
+}
 
 
-  	</script>
+</script>
 </head>
 <body>
 <div class="container-fluid bg-1 text-center">
@@ -99,8 +103,24 @@ $("#classesProp").change(function() {
     			<table class="table table-bordered">
         			<tbody>
             			<!--  <tr><th>id</th><td><input type="text" name="id" required="required"></td></tr>-->
-           				<tr><th>Property Name</th><td><input type="text" name="className" required="required"></td></tr>
-            			<tr><th>Property Type</th><td><input type="text" name="className" required="required"></td></tr>
+           				<tr><th>Class Name</th><td><select name="classname">
+						<c:forEach items="${classes}" var="classes" varStatus="itr">
+  							<option value="${classes}">${classes}</option>
+           			 	</c:forEach>
+           			 	</select>
+           			 	</td></tr>
+           			 	<tr><th>Property Name</th><td><input type="text" name="pname"></td></tr>
+            			<tr><th>Property Type</th><td>
+						<select id="propType" name="type">
+							<option value="String">String</option>
+							<option value="int">Integer</option>
+							<option value="double">Double</option>
+							<option value="boolean">Boolean</option>
+							<c:forEach items="${classes}" var="classes" varStatus="itr">
+  							<option value="${classes}">${classes}</option>
+           			 		</c:forEach>
+           			 	</select>
+						</td></tr>
            				<tr><td colspan="2"> <input type="submit" value="Add" class="btn btn-success"></tr>
         			</tbody>
     			</table>
@@ -116,20 +136,19 @@ $("#classesProp").change(function() {
       </div>
       <div id="collapse3" class="panel-collapse collapse">
         <div class="panel-body">
-        	<form action="/rest/class/addprop" method="post">
+        	<form action="/rest/class/delprop" method="post">
     			<table class="table table-bordered">
         			<tbody>
             			<!--  <tr><th>id</th><td><input type="text" name="id" required="required"></td></tr>-->
-           				<tr><th>Class Name</th><td><select id="classesProp">
+           				<tr><th>Class Name</th><td><select id="classesProp" onChange="grabProp()">
 						<c:forEach items="${classes}" var="classes" varStatus="itr">
   							<option value="${classes}">${classes}</option>
            			 	</c:forEach>
            			 	</select>
            			 	</td></tr>
-           			 	<tr><th>Property Name</th><td><select>
-						<c:forEach items="${property}" var="properties" varStatus="itr">
-  							<option value="${property}">${property}</option>
-           			 	</c:forEach>
+           			 	<tr><th>Property Name</th><td>
+           			 	<select id="classProp">
+						
            			 	</select>
            			 	</td></tr>
            				<tr><td colspan="2"> <input type="submit" value="Remove" class="btn btn-danger"></tr>
@@ -164,24 +183,49 @@ $("#classesProp").change(function() {
         </div>
       </div>
     </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Create Tree From String</a>
+        </h4>
+      </div>
+      <div id="collapse5" class="panel-collapse collapse">
+        <div class="panel-body">
+        	<form action="/rest/class/createHierarchy" method="post" id="createhierarchy">
+    			<table class="table table-bordered">
+        			<tbody>
+            			<!--  <tr><th>id</th><td><input type="text" name="id" required="required"></td></tr>-->
+           				<tr><th>Class Name</th><td><select id="classDel" name="root">
+           				<option value="Root">Root</option>
+						<c:forEach items="${classes}" var="classes" varStatus="itr">
+  							<option value="${classes}">${classes}</option>
+           			 	</c:forEach>
+           			 	</select>
+            			</td></tr>
+            			<tr><th>Hierarchy String</th><td><textarea name="construct" rows="4" cols="50">Enter text here...</textarea></td></tr>
+           				<tr><td colspan="2"> <input type="submit" value="Create" class="btn btn-success"></tr>
+        			</tbody>
+    			</table>
+    		</form>
+        </div>
+      </div>
+    </div>
   	</div>
-	</div>
-	 <div class="col-sm-4">
-    	<div class="treeview" id="treeview1">
-    		<div class="panel-group">
-    			<div class="panel panel-default">
-      				<div class="panel-heading">
-        				<h4 class="panel-title">
-          				<a data-toggle="collapse" href="#collapse5">Get JSON</a>
-       				 	</h4>
-      				</div>
-      			<div id="collapse5" class="panel-collapse collapse">
-       		<div class="panel-body">
-				<form action="/rest/class/hierarchy" method="get">
+  	<div class="panel-group" id="accordionJSON">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionJSON" href="#collapseJSON1">Get JSON (Includes MetaType Values)</a>
+        </h4>
+      </div>
+      <div id="collapseJSON1" class="panel-collapse collapse">
+        <div class="panel-body">
+        	<form action="/rest/class/hierarchy" method="get">
     			<table class="table table-bordered">
         			<tbody>
             			<!--  <tr><th>id</th><td><input type="text" name="id" required="required"></td></tr>-->
            				<tr><th>Root Class</th><td><select name="name">
+           				<option value="Root">Root</option>
 						<c:forEach items="${classes}" var="classes" varStatus="itr">
   							<option value="${classes}">${classes}</option>
            			 	</c:forEach>
@@ -196,41 +240,64 @@ $("#classesProp").change(function() {
         			</tbody>
     			</table>
     		</form>
-			</div>
+        </div>
       </div>
     </div>
-  </div>
-    	</div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordionJSON" href="#collapseJSON2">Get SubClass List</a>
+        </h4>
+      </div>
+      <div id="collapseJSON2" class="panel-collapse collapse">
+        <div class="panel-body">
+        	<form action="/rest/class/getSubclassList" method="post">
+    			<table class="table table-bordered">
+        			<tbody>
+            			<!--  <tr><th>id</th><td><input type="text" name="id" required="required"></td></tr>-->
+           				<tr><th>Root Class</th><td><select name="name">
+           				<option value="Root">Root</option>
+						<c:forEach items="${classes}" var="classes" varStatus="itr">
+  							<option value="${classes}">${classes}</option>
+           			 	</c:forEach>
+           			 	</select>
+            			</td></tr>
+            			<tr><th>Direct</th><td><select name="direct">
+            				<option value="false">False</option>
+							<option value="true">True</option>
+           			 	</select>
+            			</td></tr>
+           				<tr><td colspan="2"> <input type="submit" value="Get Tree List" class="btn btn-info"></tr>
+        			</tbody>
+    			</table>
+    		</form>
+        </div>
+      </div>
+    </div>
+    </div>
 	</div>
 	<div class="col-sm-4">
-	<div><p id="test">Base Text</p></div>
+    <div id="tree">
+    <h2>Tree View (Simplified)</h2>
+  		<p id="test">Base Text</p>
+    </div>
 	</div>
-	<!-- <ul class="list-group">
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="0">
-    	<span class="icon expand-icon glyphicon glyphicon-minus"></span>
-    	<span class="icon node-icon"></span>Parent 1</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="1">
-    	<span class="indent"></span>
-    	<span class="icon expand-icon glyphicon glyphicon-minus"></span>
-    	<span class="icon node-icon"></span>Child 1</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="2">
-    	<span class="indent"></span><span class="indent"></span><span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Child 1</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="4">
-    	<span class="indent"></span><span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Child 2</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="5">
-    	<span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Parent 2</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="6">
-    	<span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Parent 3</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="7">
-    	<span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Parent 4</li>
-    	<li class="list-group-item node-treeview1" style="color:undefined;background-color:undefined;" data-nodeid="8">
-    	<span class="icon glyphicon"></span>
-    	<span class="icon node-icon"></span>Parent 5</li></ul> -->
+	<div class="col-sm-4">
+	<h2>SubClass List</h2>
+		<table class="table table-bordered">
+    		<tbody>
+				<tr><th>Selected Class:</th><td>
+    				<c:out value="${selectedclass}"/>
+    			</td></tr>
+    			<tr><th>is Direct?:</th><td>
+    				<c:out value="${direct}"/>
+    			</td></tr>
+				<tr><th>SubClass List</th><td>
+    				<c:out value="${subtree}"/>
+    			</td></tr>
+    		</tbody>
+    	</table>
+	</div>
 </div>
 
 </body>

@@ -7,6 +7,7 @@ public class JsonClass {
 	private String name;
 	private Vector<JsonClass> subclasses;
 	private Vector<Property> properties;
+	private int level = 0;
 	
 	public JsonClass(String n) {
 		name = n;
@@ -53,5 +54,13 @@ public class JsonClass {
 	
 	public void deleteProperty(Property p) {
 		properties.remove(p);
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }
